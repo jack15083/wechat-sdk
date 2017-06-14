@@ -1,0 +1,35 @@
+{
+    "name": "wechat-sdk/wechat",
+    "description": "php sdk for public wechat number",
+    "type": "library",
+    "keywords": [
+        "wechat"
+    ],
+    "homepage": "https://github.com/jack15083/wechat-sdk",
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Jack Zeng",
+            "email": "jack15083@gmail.com",
+            "role": "PHP Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/jack15083/wechat-sdk/issues"
+    },
+    "require": {
+        "php": "^5.x || ^7.0",
+        "guzzlehttp/guzzle" : "~6.2"
+    },
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}
+
