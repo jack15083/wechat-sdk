@@ -6,36 +6,35 @@
  * Time: 17:44
  */
 namespace wechat;
-use GuzzleHttp;
 
 class Http
 {
     public $timeout;
-    public $header;
-    public $cookies;
+    public $header;// = array('Content-type: text/xml');
     public $url;
+    public $cerpath;
 
-    public function __construct($url, $timeout = 5, $header = [], $cookies = [])
+    public function __construct($url, $timeout = 5, $header = [], $cerpath = '')
     {
         $this->url = $url;
         $this->timeout = $timeout;
         $this->header = $header;
-        $this->cookies = $cookies;
-        $this->client = new GuzzleHttp\client(
-            [
-                // Base URI is used with relative requests
-                'base_uri' => $this->url,
-                // You can set any number of default request options.
-            ]
-        );
+        $this->cerpath = $cerpath;
     }
 
     public function get()
     {
-        $response = $this->client->request('GET', 'test');
+        $response = $this->curl('GET');
+        return $response;
     }
 
-    public function curl($method = 'GET', $data = '', $cerpath)
+    public function post($data)
+    {
+        $response = $this->curl('POST', $data);
+        return $response;
+    }
+
+    public function curl($method = 'GET', $data = '', $cerpath = '')
     {
         if(!preg_match('/^http(s?):\/\//', $this->url))
             return ;
@@ -43,7 +42,9 @@ class Http
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->header);
+
+        if(!empty($this->header)) curl_setopt($ch, CURLOPT_HTTPHEADER, $this->header);
+
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         if(0 === stripos($this->url, 'https')) {
@@ -63,11 +64,17 @@ class Http
 
         $res['httpcode'] = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $res['data'] = $data;
-        if($res[0] != 200){
-            $res['error'] = curl_error($ch);
+        if($res[0] != 200) {
+            throw new \Exception(curl_error($ch));
         }
+
         curl_close($ch);
 
         return $res;
+    }
+
+    public static function instance($url, $timeout = 5, $header = [], $cerpath = '')
+    {
+        return new Http($url, $timeout, $header, $cerpath);
     }
 }

@@ -18,8 +18,7 @@
         "issues": "https://github.com/jack15083/wechat-sdk/issues"
     },
     "require": {
-        "php": "^5.x || ^7.0",
-        "guzzlehttp/guzzle" : "~6.2"
+        "php": "^5.x || ^7.0"
     },
     "autoload": {
         "classmap": [
